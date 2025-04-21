@@ -86,7 +86,17 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
+    <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
+      <div className="pointer-events-none fixed top-0 left-0 w-full h-full z-[-1] opacity-55">
+        <img
+          src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80"
+          alt="Hoodie Attacker Mask"
+          className="object-cover w-full h-full brightness-50"
+          style={{ filter: "blur(2px)" }}
+        />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/80 via-cyber/60 to-black/60"></div>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <Card className="cyber-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
