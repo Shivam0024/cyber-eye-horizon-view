@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Shield, Bug, Network, MapPin, Shield as ShieldIcon, ShieldAlert, Virus, ArrowRight } from 'lucide-react';
+import { Shield, Bug, Network, MapPin, Shield as ShieldIcon, ShieldAlert, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useNavigate } from 'react-router-dom';
@@ -397,7 +397,7 @@ const Dashboard = () => {
               {stats.recentMalware.map((malware) => (
                 <div key={malware.id} className="cyber-card border border-cyber-border/30 p-3">
                   <div className="flex items-center">
-                    <Virus className="h-4 w-4 text-cyber-warning mr-2" />
+                    <Bug className="h-4 w-4 text-cyber-warning mr-2" />
                     <div className="font-medium">{malware.name}</div>
                   </div>
                   <div className="mt-1 text-xs text-cyber-foreground/70 flex justify-between">
@@ -419,7 +419,8 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      <style jsx>{`
+      <style>
+        {`
         .cyber-pulse {
           animation: pulse 2s infinite;
           box-shadow: 0 0 0 0 rgba(234, 56, 76, 0.7);
@@ -436,7 +437,8 @@ const Dashboard = () => {
             box-shadow: 0 0 0 0 rgba(234, 56, 76, 0);
           }
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
