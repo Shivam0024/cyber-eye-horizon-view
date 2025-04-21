@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Shield, Bug, Network, MapPin, Shield as ShieldIcon, ShieldAlert } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Shield, Bug, Network, MapPin, Shield as ShieldIcon, ShieldAlert, Virus, ArrowRight } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useNavigate } from 'react-router-dom';
+import { ChartContainer, ChartTooltipContent, ChartLegendContent, ChartTooltip, ChartLegend } from '@/components/ui/chart';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const mockStats = {
   totalAttacks: 2547,
@@ -27,16 +30,41 @@ const mockStats = {
     { id: 'mal-002', name: 'Mirai Botnet', type: 'Botnet', timestamp: '2023-04-18T10:15:43' },
     { id: 'mal-003', name: 'TeslaCrypt', type: 'Ransomware', timestamp: '2023-04-17T22:05:11' },
   ],
+  protocolAnalysis: [
+    { protocol: 'SMB', count: 875, percentage: 34, attackers: 145, malwareCount: 52 },
+    { protocol: 'MySQL', count: 624, percentage: 24, attackers: 98, malwareCount: 23 },
+    { protocol: 'SSH', count: 498, percentage: 20, attackers: 76, malwareCount: 31 },
+    { protocol: 'HTTP', count: 342, percentage: 14, attackers: 48, malwareCount: 18 },
+    { protocol: 'Others', count: 208, percentage: 8, attackers: 20, malwareCount: 4 }
+  ],
+  mitreAttackMapping: [
+    { id: 'T1190', name: 'Exploit Public-Facing Application', count: 487 },
+    { id: 'T1133', name: 'External Remote Services', count: 326 },
+    { id: 'T1078', name: 'Valid Accounts', count: 289 },
+    { id: 'T1021', name: 'Remote Services', count: 245 },
+  ]
 };
+
+const COLORS = ['#9b87f5', '#ea384c', '#0EA5E9', '#F97316', '#777'];
 
 const Dashboard = () => {
   const [stats, setStats] = useState(mockStats);
   const [progress, setProgress] = useState(75);
+  const [activeAttackPulse, setActiveAttackPulse] = useState(true);
+  const navigate = useNavigate();
 
   const protocolStats = stats.topAttackedPorts.reduce<Record<string, number>>((acc, cur) => {
     acc[cur.protocol] = (acc[cur.protocol] || 0) + cur.count;
     return acc;
   }, {});
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveAttackPulse(prev => !prev);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -48,6 +76,10 @@ const Dashboard = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  const navigateToMalwareAnalysis = () => {
+    navigate('/malware-analysis');
+  };
 
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
@@ -65,17 +97,17 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className="cyber-card relative">
+        <Card className={`cyber-card relative ${activeAttackPulse ? 'cyber-pulse' : ''}`}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Active Attacks</CardTitle>
-            <ShieldAlert className="h-4 w-4 text-cyber-danger" />
+            <ShieldAlert className={`h-4 w-4 ${activeAttackPulse ? 'text-cyber-danger' : 'text-cyber-accent/70'}`} />
           </CardHeader>
           <CardContent>
             <div className="relative">
               {stats.activeAttacks > 0 && (
-                <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-cyber-danger animate-ping opacity-80 z-20"></span>
+                <span className={`absolute -top-2 -right-2 w-4 h-4 rounded-full ${activeAttackPulse ? 'bg-cyber-danger' : 'bg-transparent'} animate-ping opacity-80 z-20`}></span>
               )}
-              <div className="text-2xl font-bold text-cyber-danger animate-pulse">
+              <div className={`text-2xl font-bold ${activeAttackPulse ? 'text-cyber-danger' : 'text-cyber-foreground'}`}>
                 {stats.activeAttacks}
               </div>
             </div>
@@ -240,8 +272,171 @@ const Dashboard = () => {
               ))}
             </div>
           </CardContent>
+          <CardFooter className="flex justify-end pt-2">
+            <button 
+              onClick={navigateToMalwareAnalysis}
+              className="flex items-center text-cyber-accent hover:text-cyber-accent/80 text-sm font-medium transition-colors"
+            >
+              View all malware <ArrowRight className="ml-1 h-4 w-4" />
+            </button>
+          </CardFooter>
         </Card>
       </div>
+
+      <div className="grid grid-cols-1 gap-4 mt-4 lg:grid-cols-3">
+        <Card className="cyber-card">
+          <CardHeader>
+            <CardTitle>Protocol Distribution</CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <div className="h-[250px] w-[250px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={stats.protocolAnalysis}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="count"
+                    label={({ protocol, percentage }) => `${protocol}: ${percentage}%`}
+                  >
+                    {stats.protocolAnalysis.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="bg-cyber/90 p-2 border border-cyber-accent rounded">
+                            <p className="text-sm font-bold">{data.protocol}</p>
+                            <p className="text-xs">Count: {data.count}</p>
+                            <p className="text-xs">Percentage: {data.percentage}%</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="cyber-card col-span-2">
+          <CardHeader>
+            <CardTitle>Protocol-wise Attack Analysis</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {stats.protocolAnalysis.map((protocol) => (
+                <div 
+                  key={protocol.protocol} 
+                  className="cyber-card p-3 border border-cyber-border/30 hover:border-cyber-accent/50 transition-all"
+                >
+                  <div className="text-lg font-bold text-cyber-accent">{protocol.protocol}</div>
+                  <div className="mt-2 space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-cyber-foreground/70">Attacks:</span>
+                      <span>{protocol.count}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-cyber-foreground/70">Attackers:</span>
+                      <span>{protocol.attackers}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-cyber-foreground/70">Malware:</span>
+                      <span>{protocol.malwareCount}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 mt-4 lg:grid-cols-2">
+        <Card className="cyber-card">
+          <CardHeader>
+            <CardTitle>MITRE ATT&CK Techniques</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {stats.mitreAttackMapping.map((technique) => (
+                <div key={technique.id} className="flex items-center">
+                  <div className="w-16 font-mono text-xs bg-cyber-accent/20 rounded px-1 text-center">
+                    {technique.id}
+                  </div>
+                  <div className="ml-2 flex-1">
+                    <div className="text-sm">{technique.name}</div>
+                    <div className="h-1.5 bg-cyber-border rounded-full overflow-hidden mt-1">
+                      <div 
+                        className="h-full bg-cyber-accent rounded-full"
+                        style={{ width: `${(technique.count / stats.mitreAttackMapping[0].count) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="w-12 text-right text-xs">{technique.count}</div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="cyber-card">
+          <CardHeader>
+            <CardTitle>Recent Malware Captures</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {stats.recentMalware.map((malware) => (
+                <div key={malware.id} className="cyber-card border border-cyber-border/30 p-3">
+                  <div className="flex items-center">
+                    <Virus className="h-4 w-4 text-cyber-warning mr-2" />
+                    <div className="font-medium">{malware.name}</div>
+                  </div>
+                  <div className="mt-1 text-xs text-cyber-foreground/70 flex justify-between">
+                    <span>{malware.type}</span>
+                    <span>{new Date(malware.timestamp).toLocaleString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end pt-2">
+            <button 
+              onClick={navigateToMalwareAnalysis}
+              className="flex items-center text-cyber-accent hover:text-cyber-accent/80 text-sm font-medium transition-colors"
+            >
+              View all malware <ArrowRight className="ml-1 h-4 w-4" />
+            </button>
+          </CardFooter>
+        </Card>
+      </div>
+
+      <style jsx>{`
+        .cyber-pulse {
+          animation: pulse 2s infinite;
+          box-shadow: 0 0 0 0 rgba(234, 56, 76, 0.7);
+        }
+        
+        @keyframes pulse {
+          0% {
+            box-shadow: 0 0 0 0 rgba(234, 56, 76, 0.7);
+          }
+          70% {
+            box-shadow: 0 0 0 10px rgba(234, 56, 76, 0);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(234, 56, 76, 0);
+          }
+        }
+      `}</style>
     </div>
   );
 };
