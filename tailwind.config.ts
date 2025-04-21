@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				cyber: {
+					DEFAULT: '#1A1F2C',
+					foreground: '#F1F1F1',
+					accent: '#8B5CF6',
+					'accent-hover': '#7c4ef1',
+					danger: '#ea384c',
+					warning: '#F97316',
+					success: '#10B981',
+					border: '#333340',
+					muted: '#2A2A3C'
 				}
 			},
 			borderRadius: {
@@ -84,11 +96,32 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						opacity: '1',
+						boxShadow: '0 0 10px 1px rgba(139, 92, 246, 0.2)'
+					},
+					'50%': {
+						opacity: '0.7',
+						boxShadow: '0 0 16px 4px rgba(139, 92, 246, 0.6)'
+					}
+				},
+				'data-flow': {
+					'0%': { transform: 'translateX(0)' },
+					'100%': { transform: 'translateX(100%)' }
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-glow': 'pulse-glow 3s infinite ease-in-out',
+				'data-flow': 'data-flow 3s infinite linear',
+				'fade-in': 'fade-in 0.5s ease-out'
 			}
 		}
 	},
