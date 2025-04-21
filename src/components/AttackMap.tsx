@@ -1,8 +1,6 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Mock data for attack origins and targets
 const mockAttacks = [
   { 
     id: 1, 
@@ -53,7 +51,6 @@ const AttackMap = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const animationRef = useRef<number>();
 
-  // Set up the canvas and handle resizing
   useEffect(() => {
     const handleResize = () => {
       if (canvasRef.current) {
@@ -75,7 +72,6 @@ const AttackMap = () => {
     };
   }, []);
 
-  // Add new attacks periodically
   useEffect(() => {
     const addAttack = () => {
       const randomAttack = mockAttacks[Math.floor(Math.random() * mockAttacks.length)];
@@ -88,115 +84,104 @@ const AttackMap = () => {
       
       setActiveAttacks(prev => [...prev, newAttack]);
       
-      // Remove attack after completion
       setTimeout(() => {
         setActiveAttacks(prev => prev.filter(a => a.id !== newAttack.id));
-      }, 8000); // Animation duration
+      }, 8000);
     };
     
-    // Add initial attacks
     for (let i = 0; i < 5; i++) {
       setTimeout(() => addAttack(), i * 1000);
     }
     
-    // Add new attacks periodically
     const interval = setInterval(addAttack, 2000);
     
     return () => clearInterval(interval);
   }, []);
 
-  // Main animation loop
   useEffect(() => {
     if (!canvasRef.current || dimensions.width === 0) return;
     
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
     
-    // Map coords to canvas position
     const mapCoordToCanvas = (lat: number, lng: number) => {
-      // Simple Mercator projection
       const x = (lng + 180) * (dimensions.width / 360);
       const latRad = lat * Math.PI / 180;
       const mercN = Math.log(Math.tan((Math.PI / 4) + (latRad / 2)));
       const y = (dimensions.height / 2) - (dimensions.width * mercN / (2 * Math.PI));
       return { x, y };
     };
-    
-    // Draw the attack arc
-    const drawAttackArc = (source: {x: number, y: number}, target: {x: number, y: number}, progress: number, attackType: string) => {
-      // Calculate control point for the parabola
+
+    const drawAttackArc = (source: { x: number, y: number }, target: { x: number, y: number }, progress: number, attackType: string, highlight: boolean) => {
       const midX = (source.x + target.x) / 2;
       const midY = (source.y + target.y) / 2;
       const controlPoint = {
         x: midX,
-        y: midY - 100 // Height of the arc
+        y: midY - 100
       };
-      
-      // Calculate point along the curve based on progress
+
       const t = progress;
       const x = Math.pow(1 - t, 2) * source.x + 2 * (1 - t) * t * controlPoint.x + Math.pow(t, 2) * target.x;
       const y = Math.pow(1 - t, 2) * source.y + 2 * (1 - t) * t * controlPoint.y + Math.pow(t, 2) * target.y;
-      
-      // Draw path
+
+      ctx.save();
       ctx.beginPath();
       ctx.moveTo(source.x, source.y);
       ctx.quadraticCurveTo(controlPoint.x, controlPoint.y, x, y);
-      
-      // Style based on attack type
+
       let gradient;
-      switch(attackType) {
+      switch (attackType) {
         case 'Brute Force':
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
           gradient.addColorStop(0, 'rgba(234, 56, 76, 0.1)');
-          gradient.addColorStop(1, 'rgba(234, 56, 76, 0.8)');
+          gradient.addColorStop(1, highlight ? 'rgba(234, 56, 76, 1)' : 'rgba(234, 56, 76, 0.8)');
           ctx.strokeStyle = gradient;
           break;
         case 'SQL Injection':
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
           gradient.addColorStop(0, 'rgba(249, 115, 22, 0.1)');
-          gradient.addColorStop(1, 'rgba(249, 115, 22, 0.8)');
+          gradient.addColorStop(1, highlight ? 'rgba(249, 115, 22, 1)' : 'rgba(249, 115, 22, 0.8)');
           ctx.strokeStyle = gradient;
           break;
         case 'XSS Attack':
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
           gradient.addColorStop(0, 'rgba(139, 92, 246, 0.1)');
-          gradient.addColorStop(1, 'rgba(139, 92, 246, 0.8)');
+          gradient.addColorStop(1, highlight ? 'rgba(139, 92, 246, 1)' : 'rgba(139, 92, 246, 0.8)');
           ctx.strokeStyle = gradient;
           break;
         default:
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
           gradient.addColorStop(0, 'rgba(16, 185, 129, 0.1)');
-          gradient.addColorStop(1, 'rgba(16, 185, 129, 0.8)');
+          gradient.addColorStop(1, highlight ? 'rgba(16, 185, 129, 1)' : 'rgba(16, 185, 129, 0.8)');
           ctx.strokeStyle = gradient;
       }
-      
-      ctx.lineWidth = 2;
+
+      ctx.lineWidth = highlight ? 4 : 2;
+      ctx.shadowColor = highlight ? "#ea384c" : "rgba(139, 92, 246, 0.12)";
+      ctx.shadowBlur = highlight ? 18 : 8;
       ctx.stroke();
-      
-      // Draw particle at the current position
+
       ctx.beginPath();
-      ctx.arc(x, y, 4, 0, Math.PI * 2);
-      ctx.fillStyle = 'white';
+      ctx.arc(x, y, highlight ? 6 : 4, 0, Math.PI * 2);
+      ctx.fillStyle = highlight ? '#ea384c' : 'white';
+      ctx.globalAlpha = 0.95;
       ctx.fill();
-      
-      // Add glow effect
+
       ctx.beginPath();
-      ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.arc(x, y, highlight ? 14 : 8, 0, Math.PI * 2);
+      ctx.fillStyle = highlight ? 'rgba(234, 56, 76, 0.25)' : 'rgba(255, 255, 255, 0.3)';
       ctx.fill();
-      
+      ctx.restore();
+
       return { x, y };
     };
-    
-    // Animation loop
+
     const animate = () => {
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
-      
-      // Draw world map grid (simple representation)
+
       ctx.strokeStyle = 'rgba(139, 92, 246, 0.1)';
       ctx.lineWidth = 1;
       
-      // Draw latitude lines
       for (let lat = -80; lat <= 80; lat += 20) {
         ctx.beginPath();
         const start = mapCoordToCanvas(lat, -180);
@@ -205,8 +190,7 @@ const AttackMap = () => {
         ctx.lineTo(end.x, end.y);
         ctx.stroke();
       }
-      
-      // Draw longitude lines
+
       for (let lng = -180; lng <= 180; lng += 30) {
         ctx.beginPath();
         const start = mapCoordToCanvas(-80, lng);
@@ -215,12 +199,9 @@ const AttackMap = () => {
         ctx.lineTo(end.x, end.y);
         ctx.stroke();
       }
-      
-      // Draw continents (highly simplified)
+
       ctx.beginPath();
       ctx.fillStyle = 'rgba(139, 92, 246, 0.05)';
-      
-      // North America (very simplified)
       const na = [
         mapCoordToCanvas(60, -130),
         mapCoordToCanvas(70, -90),
@@ -229,85 +210,54 @@ const AttackMap = () => {
         mapCoordToCanvas(25, -100),
         mapCoordToCanvas(30, -120)
       ];
-      
       ctx.moveTo(na[0].x, na[0].y);
-      for (let i = 1; i < na.length; i++) {
-        ctx.lineTo(na[i].x, na[i].y);
-      }
+      for (let i = 1; i < na.length; i++) ctx.lineTo(na[i].x, na[i].y);
       ctx.closePath();
       ctx.fill();
-      
-      // Europe (very simplified)
-      ctx.beginPath();
+
       const eu = [
         mapCoordToCanvas(60, 0),
         mapCoordToCanvas(70, 30),
         mapCoordToCanvas(40, 40),
         mapCoordToCanvas(35, 0)
       ];
-      
       ctx.moveTo(eu[0].x, eu[0].y);
-      for (let i = 1; i < eu.length; i++) {
-        ctx.lineTo(eu[i].x, eu[i].y);
-      }
+      for (let i = 1; i < eu.length; i++) ctx.lineTo(eu[i].x, eu[i].y);
       ctx.closePath();
       ctx.fill();
-      
-      // Draw active attacks
+
       let newTooltipInfo = null;
-      
-      setActiveAttacks(prevAttacks => 
+      setActiveAttacks(prevAttacks =>
         prevAttacks.map(attack => {
           const source = mapCoordToCanvas(attack.sourceCoords.lat, attack.sourceCoords.lng);
           const target = mapCoordToCanvas(attack.targetCoords.lat, attack.targetCoords.lng);
-          
-          // Update progress
-          const newProgress = Math.min(1, attack.progress + 0.005);
-          
-          // Draw the arc
-          const currentPoint = drawAttackArc(source, target, newProgress, attack.attackType);
-          
-          // Store tooltip info if this is the latest attack
+          const highlight = attack.progress < 0.2;
+
+          const newProgress = Math.min(1, attack.progress + 0.008);
+
+          const currentPoint = drawAttackArc(source, target, newProgress, attack.attackType, highlight);
+
           if (attack.timestamp > (newTooltipInfo?.attack?.timestamp || 0)) {
-            newTooltipInfo = {
-              x: currentPoint.x,
-              y: currentPoint.y,
-              attack
-            };
+            newTooltipInfo = { x: currentPoint.x, y: currentPoint.y, attack };
           }
-          
-          return {
-            ...attack,
-            progress: newProgress
-          };
+          return { ...attack, progress: newProgress };
         })
       );
-      
-      if (newTooltipInfo) {
-        setTooltipInfo(newTooltipInfo);
-      }
-      
+      if (newTooltipInfo) setTooltipInfo(newTooltipInfo);
       animationRef.current = requestAnimationFrame(animate);
     };
-    
+
     animate();
-    
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, [dimensions, activeAttacks]);
 
   return (
     <div className="relative w-full h-full min-h-[500px]">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full bg-cyber"
-      />
-      
+      <canvas ref={canvasRef} className="w-full h-full bg-cyber" />
       {tooltipInfo && (
-        <div 
+        <div
           className="absolute pointer-events-none bg-cyber-muted border border-cyber-border rounded p-2 shadow-lg text-xs z-10 max-w-[200px]"
           style={{
             left: `${tooltipInfo.x + 10}px`,
@@ -319,7 +269,6 @@ const AttackMap = () => {
           <div>Type: {tooltipInfo.attack.attackType}</div>
         </div>
       )}
-      
       <div className="absolute bottom-4 left-4 flex gap-3">
         <div className="flex items-center">
           <div className="w-3 h-3 rounded-full bg-[#ea384c] mr-2"></div>

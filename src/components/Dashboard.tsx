@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { Shield, Bug, Network, MapPin, Shield as ShieldIcon, ShieldAlert } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
-// Mock data - In a real implementation, this would come from your API
 const mockStats = {
   totalAttacks: 2547,
   activeAttacks: 14,
@@ -35,8 +33,12 @@ const Dashboard = () => {
   const [stats, setStats] = useState(mockStats);
   const [progress, setProgress] = useState(75);
 
+  const protocolStats = stats.topAttackedPorts.reduce<Record<string, number>>((acc, cur) => {
+    acc[cur.protocol] = (acc[cur.protocol] || 0) + cur.count;
+    return acc;
+  }, {});
+
   useEffect(() => {
-    // Simulate real-time data updates
     const timer = setInterval(() => {
       setStats((prevStats) => ({
         ...prevStats,
@@ -49,7 +51,7 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <Card className="cyber-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Total Attacks</CardTitle>
@@ -63,21 +65,26 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
-        
-        <Card className="cyber-card">
+        <Card className="cyber-card relative">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Active Attacks</CardTitle>
             <ShieldAlert className="h-4 w-4 text-cyber-danger" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-cyber-danger animate-pulse">{stats.activeAttacks}</div>
+            <div className="relative">
+              {stats.activeAttacks > 0 && (
+                <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-cyber-danger animate-ping opacity-80 z-20"></span>
+              )}
+              <div className="text-2xl font-bold text-cyber-danger animate-pulse">
+                {stats.activeAttacks}
+              </div>
+            </div>
             <p className="text-xs text-cyber-foreground/70">Live monitoring</p>
             <div className="mt-2">
               <Progress value={stats.activeAttacks * 3} className="h-1 bg-cyber-border" />
             </div>
           </CardContent>
         </Card>
-        
         <Card className="cyber-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Captured Malware</CardTitle>
@@ -91,7 +98,6 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
-        
         <Card className="cyber-card">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Unique Attackers</CardTitle>
@@ -102,6 +108,21 @@ const Dashboard = () => {
             <p className="text-xs text-cyber-foreground/70">From 48 countries</p>
             <div className="mt-2">
               <Progress value={45} className="h-1 bg-cyber-border" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="cyber-card">
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">Protocol Analysis</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {Object.entries(protocolStats).map(([protocol, count]) => (
+                <div key={protocol} className="flex items-center justify-between text-xs">
+                  <span className="font-semibold">{protocol}</span>
+                  <span className="ml-2">{count}</span>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
