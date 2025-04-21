@@ -32,7 +32,7 @@ const mockAIResponses = [
     aiResponse: `
 50:00:00:02:ff:15:04:23:32:38:30:30:30:45:72:72:6f:72:3a:20:41:63:63:65:73:73:20:64:65:6e:69:65:64:20:66:6f:72:20:75:73:65:72:20:27:72:6f:6f:74:27:40:27:31:31:38:2e:31:39:33:2e:33:32:2e:35:34:27:20:28:75:73:69:6e:67:20:70:61:73:73:77:6f:72:64:3a:20:59:45:53:29:00:60:05:23:32:38:30:30:30:00`,
     filePresented: 'mysql/data/mysql.user (emulated)',
-    aiStrategy: 'Authentication Honeypot - The AI system is logging MySQL authentication attempts. It's presenting a fake MySQL authentication challenge that appears exploitable but instead records all credentials.',
+    aiStrategy: "Authentication Honeypot - The AI system is logging MySQL authentication attempts. It's presenting a fake MySQL authentication challenge that appears exploitable but instead records all credentials.",
     status: 'Authentication failure recorded'
   },
   {
