@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,7 @@ import AttackMap from "./pages/AttackMap";
 import MalwareAnalysis from "./pages/MalwareAnalysis";
 import AIMonitoring from "./pages/AIMonitoring";
 import NotFound from "./pages/NotFound";
+import AttackerDetail from "./pages/AttackerDetail";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +25,7 @@ const App = () => (
           <Route path="/attack-map" element={<AttackMap />} />
           <Route path="/malware-analysis" element={<MalwareAnalysis />} />
           <Route path="/ai-monitoring" element={<AIMonitoring />} />
+          <Route path="/attacker/:protocol" element={<AttackerDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

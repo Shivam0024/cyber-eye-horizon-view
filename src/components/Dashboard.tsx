@@ -81,6 +81,10 @@ const Dashboard = () => {
     navigate('/malware-analysis');
   };
 
+  const handleProtocolCardClick = (protocol: string) => {
+    navigate(`/attacker/${protocol}`);
+  };
+
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -336,7 +340,9 @@ const Dashboard = () => {
               {stats.protocolAnalysis.map((protocol) => (
                 <div 
                   key={protocol.protocol} 
-                  className="cyber-card p-3 border border-cyber-border/30 hover:border-cyber-accent/50 transition-all"
+                  className="cyber-card p-3 border border-cyber-border/30 hover:border-cyber-accent/80 transition-all cursor-pointer hover-scale"
+                  onClick={() => handleProtocolCardClick(protocol.protocol)}
+                  title={`View attackers for ${protocol.protocol}`}
                 >
                   <div className="text-lg font-bold text-cyber-accent">{protocol.protocol}</div>
                   <div className="mt-2 space-y-1 text-sm">
