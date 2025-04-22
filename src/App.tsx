@@ -10,6 +10,7 @@ import MalwareAnalysis from "./pages/MalwareAnalysis";
 import AIMonitoring from "./pages/AIMonitoring";
 import NotFound from "./pages/NotFound";
 import AttackerDetail from "./pages/AttackerDetail";
+import DecoyNet from "./pages/DecoyNet";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +21,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<DecoyNet />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/attack-map" element={<AttackMap />} />
           <Route path="/malware-analysis" element={<MalwareAnalysis />} />
