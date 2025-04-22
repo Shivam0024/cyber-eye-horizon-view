@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Shield, Bug, Network, MapPin, ChevronLeft, Home } from 'lucide-react';
+import { Shield, Bug, Network, MapPin, ChevronLeft, Home, Terminal, Activity, User, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -11,13 +11,24 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isHomePage = location.pathname === '/';
+  const isCowriePage = location.pathname.includes('/cowrie');
 
-  const navigation = [
+  const mainNavigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Shield },
     { name: 'Attack Map', href: '/attack-map', icon: MapPin },
     { name: 'Malware Analysis', href: '/malware-analysis', icon: Bug },
     { name: 'AI Monitoring', href: '/ai-monitoring', icon: Network },
   ];
+
+  const cowrieNavigation = [
+    { name: 'Cowrie Dashboard', href: '/cowrie-dashboard', icon: Terminal },
+    { name: 'Attack Map', href: '/cowrie/attack-map', icon: MapPin },
+    { name: 'Session Analysis', href: '/cowrie/session-analysis', icon: Activity },
+    { name: 'Attacker Profile', href: '/cowrie/attacker-profile', icon: User },
+    { name: 'Cowrie Logs', href: '/cowrie/logs', icon: FileText },
+  ];
+
+  const navigation = isCowriePage ? cowrieNavigation : mainNavigation;
 
   return (
     <nav className="bg-cyber-muted border-b border-cyber-border">
