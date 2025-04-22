@@ -75,6 +75,9 @@ export default {
 					muted: '#2A2A3C'
 				}
 			},
+			backgroundImage: {
+				'cybersecurity-bg': "linear-gradient(rgba(26, 31, 44, 0.85), rgba(26, 31, 44, 0.95)), url('/cybersecurity-bg.jpg')",
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',

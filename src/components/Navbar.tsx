@@ -1,12 +1,16 @@
 
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Shield, Bug, Network, MapPin } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Shield, Bug, Network, MapPin, ChevronLeft, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isHomePage = location.pathname === '/';
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Shield },
@@ -21,6 +25,17 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
+              {!isHomePage && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="mr-2"
+                  onClick={() => navigate('/')}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <Home className="h-4 w-4" />
+                </Button>
+              )}
               <Link to="/" className="flex items-center">
                 <Shield className="h-8 w-8 text-cyber-accent mr-2" />
                 <span className="font-bold text-xl bg-gradient-to-r from-white to-cyber-accent bg-clip-text text-transparent">
