@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Shield, Bug, Network, MapPin, Shield as ShieldIcon, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Shield, Bug, Network, MapPin, ShieldAlert, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useNavigate } from 'react-router-dom';
@@ -45,7 +45,7 @@ const mockStats = {
   ]
 };
 
-const COLORS = ['#9b87f5', '#ea384c', '#0EA5E9', '#F97316', '#777'];
+const COLORS = ['#8B5CF6', '#ea384c', '#0EA5E9', '#F97316', '#777'];
 
 const Dashboard = () => {
   const [stats, setStats] = useState(mockStats);
@@ -87,7 +87,7 @@ const Dashboard = () => {
 
   return (
     <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="fixed inset-0 z-[-1] bg-gradient-to-br from-cyber/50 to-black">
+      <div className="fixed inset-0 z-[-1] bg-cyber">
         <div className="absolute inset-0 opacity-10">
           <div className="cyber-grid-pattern absolute inset-0"></div>
           <div className="hexagon-pattern absolute inset-0"></div>
@@ -101,7 +101,7 @@ const Dashboard = () => {
             <Shield className="h-4 w-4 text-cyber-accent" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalAttacks.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-cyber-foreground">{stats.totalAttacks.toLocaleString()}</div>
             <p className="text-xs text-cyber-foreground/70">+21% from last month</p>
             <div className="mt-2">
               <Progress value={75} className="h-1 bg-cyber-border" />
