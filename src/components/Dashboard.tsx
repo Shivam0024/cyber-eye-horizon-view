@@ -111,7 +111,7 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className={`cyber-card relative ${activeAttackPulse ? 'cyber-pulse' : ''}`}>
+        <Card className={`cyber-card relative ${activeAttackPulse ? 'dense-cyber-pulse' : ''}`}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Active Attacks</CardTitle>
             <ShieldAlert className={`h-4 w-4 ${activeAttackPulse ? 'text-cyber-danger' : 'text-cyber-accent/70'}`} />
@@ -119,9 +119,17 @@ const Dashboard = () => {
           <CardContent>
             <div className="relative">
               {stats.activeAttacks > 0 && (
-                <span className={`absolute -top-2 -right-2 w-4 h-4 rounded-full ${activeAttackPulse ? 'bg-cyber-danger' : 'bg-transparent'} animate-ping opacity-80 z-20`}></span>
+                <span
+                  className={`absolute -top-2 -right-2 w-6 h-6 rounded-full ${
+                    activeAttackPulse ? 'bg-cyber-danger/80' : 'bg-transparent'
+                  } animate-vigorous-ping opacity-90 z-20`}
+                ></span>
               )}
-              <div className={`text-2xl font-bold ${activeAttackPulse ? 'text-cyber-danger' : 'text-cyber-foreground'}`}>
+              <div
+                className={`text-2xl font-bold ${
+                  activeAttackPulse ? 'text-cyber-danger' : 'text-cyber-foreground'
+                }`}
+              >
                 {stats.activeAttacks}
               </div>
             </div>
@@ -452,6 +460,25 @@ const Dashboard = () => {
           100% {
             box-shadow: 0 0 0 0 rgba(234, 56, 76, 0);
           }
+        }
+        
+        .dense-cyber-pulse {
+          animation: densePulse 1s infinite linear;
+          box-shadow: 0 0 0 0 rgba(234,56,76,0.95), 0 0 15px 5px rgba(234,56,76,0.45);
+        }
+        .animate-vigorous-ping {
+          animation: vigorousPing 1s cubic-bezier(0,0,.2,1) infinite;
+        }
+        @keyframes densePulse {
+          0% { box-shadow: 0 0 0 0 rgba(234,56,76,0.85),0 0 10px 3px rgba(234,56,76,0.67); }
+          50% { box-shadow: 0 0 0 12px rgba(234,56,76,0.13),0 0 24px 10px rgba(234,56,76,0.15);}
+          100% { box-shadow: 0 0 0 0 rgba(234,56,76,0.85),0 0 12px 5px rgba(234,56,76,0.67);}
+        }
+        @keyframes vigorousPing {
+          0% { transform: scale(1); opacity: 1;}
+          60% { transform: scale(1.4); opacity: .6;}
+          80% { transform: scale(1.5); opacity: .3;}
+          100% { transform: scale(1.7); opacity: 0;}
         }
         `}
       </style>

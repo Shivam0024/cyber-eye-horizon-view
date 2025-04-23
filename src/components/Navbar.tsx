@@ -5,6 +5,17 @@ import { Shield, Bug, Network, MapPin, ChevronLeft, Home, Terminal, Activity, Us
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
+const getAppBrand = (pathname: string) => {
+  if (pathname === '/') return 'DecoyNet AI';
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/attack-map') || pathname.startsWith('/malware-analysis') || pathname.startsWith('/ai-monitoring')) {
+    return 'Dionaea AI';
+  }
+  if (pathname.includes('/cowrie')) {
+    return 'Cowrie AI';
+  }
+  return 'DecoyNet AI';
+};
+
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,6 +40,7 @@ const Navbar = () => {
   ];
 
   const navigation = isCowriePage ? cowrieNavigation : mainNavigation;
+  const appBrand = getAppBrand(location.pathname);
 
   return (
     <nav className="bg-cyber-muted border-b border-cyber-border">
@@ -47,10 +59,10 @@ const Navbar = () => {
                   <Home className="h-4 w-4" />
                 </Button>
               )}
-              <Link to="/" className="flex items-center">
+              <Link to={isCowriePage ? "/cowrie-dashboard" : isHomePage ? "/" : "/dashboard"} className="flex items-center gap-1">
                 <Shield className="h-8 w-8 text-cyber-accent mr-2" />
-                <span className="font-bold text-xl bg-gradient-to-r from-white to-cyber-accent bg-clip-text text-transparent">
-                  Dionaea AI
+                <span className="font-bold text-xl bg-gradient-to-r from-white to-cyber-accent bg-clip-text text-transparent transition-all duration-300">
+                  {appBrand}
                 </span>
               </Link>
             </div>
