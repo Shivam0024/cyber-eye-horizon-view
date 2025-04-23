@@ -87,14 +87,11 @@ const Dashboard = () => {
 
   return (
     <div className="relative container mx-auto py-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <div className="pointer-events-none fixed top-0 left-0 w-full h-full z-[-1] opacity-55">
-        <img
-          src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80"
-          alt="Hoodie Attacker Mask"
-          className="object-cover w-full h-full brightness-50"
-          style={{ filter: "blur(2px)" }}
-        />
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/80 via-cyber/60 to-black/60"></div>
+      <div className="fixed inset-0 z-[-1] bg-gradient-to-br from-cyber/50 to-black">
+        <div className="absolute inset-0 opacity-10">
+          <div className="cyber-grid-pattern absolute inset-0"></div>
+          <div className="hexagon-pattern absolute inset-0"></div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -120,7 +117,7 @@ const Dashboard = () => {
             <div className="relative">
               {stats.activeAttacks > 0 && (
                 <span
-                  className={`absolute -top-2 -right-2 w-7 h-7 rounded-full ${
+                  className={`absolute -top-2 -right-2 w-6 h-6 rounded-full ${
                     activeAttackPulse ? 'bg-cyber-danger/90' : 'bg-transparent'
                   } animate-vigorous-ping opacity-95 z-20`}
                 ></span>
@@ -464,8 +461,8 @@ const Dashboard = () => {
         
         .dense-cyber-pulse {
           animation: densePulse 0.8s infinite linear;
-          box-shadow: 0 0 0 0 rgba(234,56,76,0.95), 0 0 20px 8px rgba(234,56,76,0.65);
-          border: 1px solid rgba(234,56,76,0.7);
+          box-shadow: 0 0 0 0 rgba(234,56,76,0.95), 0 0 20px 10px rgba(234,56,76,0.8);
+          border: 1px solid rgba(234,56,76,0.8);
         }
         
         .animate-vigorous-ping {
@@ -473,16 +470,31 @@ const Dashboard = () => {
         }
         
         @keyframes densePulse {
-          0% { box-shadow: 0 0 0 0 rgba(234,56,76,0.9), 0 0 15px 7px rgba(234,56,76,0.75); }
-          50% { box-shadow: 0 0 0 15px rgba(234,56,76,0.3), 0 0 30px 15px rgba(234,56,76,0.3);}
-          100% { box-shadow: 0 0 0 0 rgba(234,56,76,0.9), 0 0 15px 7px rgba(234,56,76,0.75);}
+          0% { box-shadow: 0 0 0 0 rgba(234,56,76,0.95), 0 0 20px 10px rgba(234,56,76,0.85); }
+          50% { box-shadow: 0 0 0 15px rgba(234,56,76,0.4), 0 0 35px 20px rgba(234,56,76,0.4);}
+          100% { box-shadow: 0 0 0 0 rgba(234,56,76,0.95), 0 0 20px 10px rgba(234,56,76,0.85);}
         }
         
         @keyframes vigorousPing {
           0% { transform: scale(1); opacity: 1;}
-          60% { transform: scale(1.5); opacity: .7;}
-          80% { transform: scale(1.8); opacity: .5;}
-          100% { transform: scale(2.1); opacity: 0;}
+          60% { transform: scale(1.8); opacity: .75;}
+          80% { transform: scale(2.2); opacity: .6;}
+          100% { transform: scale(2.5); opacity: 0;}
+        }
+        
+        .cyber-grid-pattern {
+          background-size: 50px 50px;
+          background-image: 
+            linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+        }
+        
+        .hexagon-pattern {
+          background-color: transparent;
+          background-image: 
+            repeating-linear-gradient(60deg, rgba(139, 92, 246, 0.08) 0px, rgba(139, 92, 246, 0.08) 2px, transparent 2px, transparent 20px),
+            repeating-linear-gradient(-60deg, rgba(139, 92, 246, 0.08) 0px, rgba(139, 92, 246, 0.08) 2px, transparent 2px, transparent 20px);
+          opacity: 0.4;
         }
         `}
       </style>

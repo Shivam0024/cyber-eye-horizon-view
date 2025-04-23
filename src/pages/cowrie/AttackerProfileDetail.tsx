@@ -36,6 +36,7 @@ const AttackerProfileDetail = () => {
   const attacker = location.state?.attacker || 
     {...MOCK_ATTACKER, ip: ip || MOCK_ATTACKER.ip};
 
+  // Process malware type data to ensure we always have data for the pie chart
   const malwareTypeData: { name: string; value: number }[] = [];
   const counter: Record<string, number> = {};
   
@@ -50,6 +51,15 @@ const AttackerProfileDetail = () => {
   return (
     <div className="min-h-screen bg-cyber">
       <Navbar />
+      
+      {/* Cybersecurity-themed background pattern */}
+      <div className="fixed inset-0 z-[-1] bg-gradient-to-br from-cyber/50 to-black/90">
+        <div className="absolute inset-0 opacity-10">
+          <div className="cyber-grid-pattern absolute inset-0"></div>
+          <div className="hexagon-pattern absolute inset-0"></div>
+        </div>
+      </div>
+      
       <div className="container mx-auto py-6 px-4">
         <Button
           variant="ghost"
@@ -67,7 +77,7 @@ const AttackerProfileDetail = () => {
         </p>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="cyber-card border-cyber-border/80 bg-cyber/70 shadow-xl lg:col-span-2">
+          <Card className="cyber-card border-cyber-border/80 bg-cyber/70 shadow-xl backdrop-blur-sm lg:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-2xl font-bold">
                 <span className="inline-flex rounded-full bg-cyber-accent/70 p-2">
@@ -92,7 +102,7 @@ const AttackerProfileDetail = () => {
                     </span>
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 bg-cyber/30 p-4 rounded-lg">
                   <div className="flex justify-between">
                     <span>First Seen:</span>
                     <span className="font-mono">{attacker.firstSeen}</span>
@@ -141,37 +151,62 @@ const AttackerProfileDetail = () => {
             </CardContent>
           </Card>
 
-          <Card className="cyber-card border-cyber-border/80 bg-cyber/70 shadow-xl">
+          <Card className="cyber-card border-cyber-border/80 bg-cyber/70 shadow-xl backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Malware Type Distribution</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={malwareTypeData}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={120}
-                      dataKey="value"
-                      label={({ name, value }) => `${name}: ${value}`}
-                    >
-                      {malwareTypeData.map((entry, i) => (
-                        <Cell key={entry.name} fill={MALWARE_COLORS[i % MALWARE_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      wrapperClassName="!bg-cyber !py-2 !px-3 !rounded"
-                      formatter={(value: any, name: any) => [`${value}`, `${name}`]}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+                {malwareTypeData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={malwareTypeData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={120}
+                        dataKey="value"
+                        label={({ name, value }) => `${name}: ${value}`}
+                      >
+                        {malwareTypeData.map((entry, i) => (
+                          <Cell key={entry.name} fill={MALWARE_COLORS[i % MALWARE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        wrapperClassName="!bg-cyber !py-2 !px-3 !rounded"
+                        formatter={(value: any, name: any) => [`${value}`, `${name}`]}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-cyber-foreground/70">No malware data available</p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
+      
+      <style>
+        {`
+        .cyber-grid-pattern {
+          background-size: 50px 50px;
+          background-image: 
+            linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+        }
+        
+        .hexagon-pattern {
+          background-color: transparent;
+          background-image: 
+            repeating-linear-gradient(60deg, rgba(139, 92, 246, 0.08) 0px, rgba(139, 92, 246, 0.08) 2px, transparent 2px, transparent 20px),
+            repeating-linear-gradient(-60deg, rgba(139, 92, 246, 0.08) 0px, rgba(139, 92, 246, 0.08) 2px, transparent 2px, transparent 20px);
+          opacity: 0.4;
+        }
+        `}
+      </style>
     </div>
   );
 };
