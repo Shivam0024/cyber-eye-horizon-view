@@ -100,10 +100,9 @@ const AttackMap = () => {
 
   useEffect(() => {
     if (!canvasRef.current || dimensions.width === 0) return;
-    
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
-    
+
     const mapCoordToCanvas = (lat: number, lng: number) => {
       const x = (lng + 180) * (dimensions.width / 360);
       const latRad = lat * Math.PI / 180;
@@ -112,13 +111,9 @@ const AttackMap = () => {
       return { x, y };
     };
 
-    const drawAttackArc = (source: { x: number, y: number }, target: { x: number, y: number }, progress: number, attackType: string, highlight: boolean) => {
-      const midX = (source.x + target.x) / 2;
-      const midY = (source.y + target.y) / 2;
-      const controlPoint = {
-        x: midX,
-        y: midY - 100
-      };
+    const drawAttackArc = (source, target, progress, attackType, highlight) => {
+      const midX = (source.x + target.x) / 2, midY = (source.y + target.y) / 2;
+      const controlPoint = { x: midX, y: midY - 100 };
 
       const t = progress;
       const x = Math.pow(1 - t, 2) * source.x + 2 * (1 - t) * t * controlPoint.x + Math.pow(t, 2) * target.x;
@@ -133,43 +128,45 @@ const AttackMap = () => {
       switch (attackType) {
         case 'Brute Force':
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
-          gradient.addColorStop(0, 'rgba(234, 56, 76, 0.1)');
-          gradient.addColorStop(1, highlight ? 'rgba(234, 56, 76, 1)' : 'rgba(234, 56, 76, 0.8)');
+          gradient.addColorStop(0, '#3bb27322');
+          gradient.addColorStop(1, highlight ? '#4ade80' : '#166534');
           ctx.strokeStyle = gradient;
           break;
         case 'SQL Injection':
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
-          gradient.addColorStop(0, 'rgba(249, 115, 22, 0.1)');
-          gradient.addColorStop(1, highlight ? 'rgba(249, 115, 22, 1)' : 'rgba(249, 115, 22, 0.8)');
+          gradient.addColorStop(0, '#22d3ee22');
+          gradient.addColorStop(1, highlight ? '#22d3ee' : '#164e63');
           ctx.strokeStyle = gradient;
           break;
         case 'XSS Attack':
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
-          gradient.addColorStop(0, 'rgba(139, 92, 246, 0.1)');
-          gradient.addColorStop(1, highlight ? 'rgba(139, 92, 246, 1)' : 'rgba(139, 92, 246, 0.8)');
+          gradient.addColorStop(0, '#8b5cf622');
+          gradient.addColorStop(1, highlight ? '#8b5cf6' : '#4c1d95');
           ctx.strokeStyle = gradient;
           break;
         default:
           gradient = ctx.createLinearGradient(source.x, source.y, x, y);
-          gradient.addColorStop(0, 'rgba(16, 185, 129, 0.1)');
-          gradient.addColorStop(1, highlight ? 'rgba(16, 185, 129, 1)' : 'rgba(16, 185, 129, 0.8)');
+          gradient.addColorStop(0, '#10b98133');
+          gradient.addColorStop(1, highlight ? '#10b981' : '#064e3b');
           ctx.strokeStyle = gradient;
       }
-
-      ctx.lineWidth = highlight ? 4 : 2;
-      ctx.shadowColor = highlight ? "#ea384c" : "rgba(139, 92, 246, 0.12)";
-      ctx.shadowBlur = highlight ? 18 : 8;
+      ctx.lineWidth = highlight ? 6 : 3;
+      ctx.shadowColor = highlight ? "#4ade80" : "#333";
+      ctx.shadowBlur = highlight ? 30 : 15;
+      ctx.globalAlpha = highlight ? 0.85 : 0.7;
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(x, y, highlight ? 6 : 4, 0, Math.PI * 2);
-      ctx.fillStyle = highlight ? '#ea384c' : 'white';
-      ctx.globalAlpha = 0.95;
+      ctx.arc(x, y, highlight ? 11 : 6, 0, Math.PI * 2);
+      ctx.fillStyle = highlight ? '#4ade80cc' : '#313c3cc0';
+      ctx.globalAlpha = highlight ? 0.93 : 0.78;
+      ctx.shadowColor = highlight ? "#4ade80" : "#22d3ee";
+      ctx.shadowBlur = highlight ? 40 : 12;
       ctx.fill();
 
       ctx.beginPath();
-      ctx.arc(x, y, highlight ? 14 : 8, 0, Math.PI * 2);
-      ctx.fillStyle = highlight ? 'rgba(234, 56, 76, 0.25)' : 'rgba(255, 255, 255, 0.3)';
+      ctx.arc(x, y, highlight ? 18 : 11, 0, Math.PI * 2);
+      ctx.fillStyle = highlight ? 'rgba(74,222,128, 0.17)' : 'rgba(34,211,238,0.10)';
       ctx.fill();
       ctx.restore();
 
