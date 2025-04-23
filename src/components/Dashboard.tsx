@@ -120,9 +120,9 @@ const Dashboard = () => {
             <div className="relative">
               {stats.activeAttacks > 0 && (
                 <span
-                  className={`absolute -top-2 -right-2 w-6 h-6 rounded-full ${
-                    activeAttackPulse ? 'bg-cyber-danger/80' : 'bg-transparent'
-                  } animate-vigorous-ping opacity-90 z-20`}
+                  className={`absolute -top-2 -right-2 w-7 h-7 rounded-full ${
+                    activeAttackPulse ? 'bg-cyber-danger/90' : 'bg-transparent'
+                  } animate-vigorous-ping opacity-95 z-20`}
                 ></span>
               )}
               <div
@@ -463,22 +463,26 @@ const Dashboard = () => {
         }
         
         .dense-cyber-pulse {
-          animation: densePulse 1s infinite linear;
-          box-shadow: 0 0 0 0 rgba(234,56,76,0.95), 0 0 15px 5px rgba(234,56,76,0.45);
+          animation: densePulse 0.8s infinite linear;
+          box-shadow: 0 0 0 0 rgba(234,56,76,0.95), 0 0 20px 8px rgba(234,56,76,0.65);
+          border: 1px solid rgba(234,56,76,0.7);
         }
+        
         .animate-vigorous-ping {
-          animation: vigorousPing 1s cubic-bezier(0,0,.2,1) infinite;
+          animation: vigorousPing 0.8s cubic-bezier(0,0,.2,1) infinite;
         }
+        
         @keyframes densePulse {
-          0% { box-shadow: 0 0 0 0 rgba(234,56,76,0.85),0 0 10px 3px rgba(234,56,76,0.67); }
-          50% { box-shadow: 0 0 0 12px rgba(234,56,76,0.13),0 0 24px 10px rgba(234,56,76,0.15);}
-          100% { box-shadow: 0 0 0 0 rgba(234,56,76,0.85),0 0 12px 5px rgba(234,56,76,0.67);}
+          0% { box-shadow: 0 0 0 0 rgba(234,56,76,0.9), 0 0 15px 7px rgba(234,56,76,0.75); }
+          50% { box-shadow: 0 0 0 15px rgba(234,56,76,0.3), 0 0 30px 15px rgba(234,56,76,0.3);}
+          100% { box-shadow: 0 0 0 0 rgba(234,56,76,0.9), 0 0 15px 7px rgba(234,56,76,0.75);}
         }
+        
         @keyframes vigorousPing {
           0% { transform: scale(1); opacity: 1;}
-          60% { transform: scale(1.4); opacity: .6;}
-          80% { transform: scale(1.5); opacity: .3;}
-          100% { transform: scale(1.7); opacity: 0;}
+          60% { transform: scale(1.5); opacity: .7;}
+          80% { transform: scale(1.8); opacity: .5;}
+          100% { transform: scale(2.1); opacity: 0;}
         }
         `}
       </style>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Eye } from "lucide-react";
 
 // Mock: Attacker list (replace with real data/fetch later)
 const attackerList = [
@@ -12,11 +13,10 @@ const attackerList = [
   { id: 1004, ip: '203.0.113.77', location: 'Sydney, Australia', asn: 'AS1221 Telstra', firstSeen: '2025-04-18', lastSeen: '2025-04-19', sessions: 1 }
 ];
 
-// For now: just show attacker list. Later, if user wants, detail page can be another route!
 const AttackerProfile = () => {
   const navigate = useNavigate();
 
-  const handleGoDetail = (attacker: typeof attackerList[0]) => {
+  const handleGoDetail = (attacker) => {
     navigate(`/cowrie/attacker-profile/${attacker.ip}`, { state: { attacker } });
   };
 
@@ -60,9 +60,10 @@ const AttackerProfile = () => {
                     <TableCell>{attacker.sessions}</TableCell>
                     <TableCell>
                       <button
-                        className="px-3 py-1 text-cyber-accent hover:underline bg-cyber-muted rounded shadow-sm text-sm transition"
+                        className="px-3 py-1 flex items-center gap-2 text-cyber-accent hover:underline bg-cyber-muted rounded shadow-sm text-sm transition"
                         onClick={e => { e.stopPropagation(); handleGoDetail(attacker); }}
                       >
+                        <Eye size={16} />
                         View Profile
                       </button>
                     </TableCell>

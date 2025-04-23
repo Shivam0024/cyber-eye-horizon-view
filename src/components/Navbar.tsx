@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 
 const getAppBrand = (pathname: string) => {
   if (pathname === '/') return 'DecoyNet AI';
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/attack-map') || pathname.startsWith('/malware-analysis') || pathname.startsWith('/ai-monitoring')) {
+  if (pathname.startsWith('/dashboard') || pathname.startsWith('/attack-map') || 
+      pathname.startsWith('/malware-analysis') || pathname.startsWith('/ai-monitoring')) {
     return 'Dionaea AI';
   }
   if (pathname.includes('/cowrie')) {

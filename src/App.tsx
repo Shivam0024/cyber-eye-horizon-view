@@ -15,6 +15,7 @@ import CowrieDashboard from "./pages/CowrieDashboard";
 import CowrieAttackMap from "./pages/cowrie/CowrieAttackMap";
 import SessionAnalysis from "./pages/cowrie/SessionAnalysis";
 import AttackerProfile from "./pages/cowrie/AttackerProfile";
+import AttackerProfileDetail from "./pages/cowrie/AttackerProfileDetail";
 import CowrieLogs from "./pages/cowrie/CowrieLogs";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/cowrie/attack-map" element={<CowrieAttackMap />} />
           <Route path="/cowrie/session-analysis" element={<SessionAnalysis />} />
           <Route path="/cowrie/attacker-profile" element={<AttackerProfile />} />
+          <Route path="/cowrie/attacker-profile/:ip" element={<AttackerProfileDetail />} />
           <Route path="/cowrie/logs" element={<CowrieLogs />} />
           
           <Route path="*" element={<NotFound />} />
