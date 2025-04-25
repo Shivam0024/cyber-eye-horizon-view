@@ -21,9 +21,9 @@ const AttackerProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cyber">
+    <div className="min-h-screen w-full bg-cyber">
       <Navbar />
-      <div className="container mx-auto py-6 px-4">
+      <div className="w-full px-4 py-6">
         <h1 className="text-3xl font-bold text-cyber-accent mb-6">Attackers</h1>
         <Card className="bg-cyber-muted border-cyber-border">
           <CardHeader>

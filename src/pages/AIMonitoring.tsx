@@ -4,9 +4,11 @@ import AIResponseViewer from "@/components/AIResponseViewer";
 
 const AIMonitoringPage = () => {
   return (
-    <div className="min-h-screen bg-cyber">
+    <div className="min-h-screen w-full bg-cyber">
       <Navbar />
-      <AIResponseViewer />
+      <div className="w-full">
+        <AIResponseViewer />
+      </div>
     </div>
   );
 };

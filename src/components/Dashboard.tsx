@@ -86,7 +86,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cyber">
+    <div className="min-h-screen w-full bg-cyber">
       <div className="fixed inset-0 z-[-1] bg-cyber">
         <div className="absolute inset-0 opacity-10">
           <div className="cyber-grid-pattern absolute inset-0"></div>
@@ -94,7 +94,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-6 xl:max-w-[1800px] 2xl:max-w-[2200px]">
+      <div className="w-full px-4 py-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <Card className="cyber-card">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">

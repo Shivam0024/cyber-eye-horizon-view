@@ -4,9 +4,11 @@ import Dashboard from "@/components/Dashboard";
 
 const DashboardPage = () => {
   return (
-    <div className="min-h-screen bg-cyber">
+    <div className="min-h-screen w-full bg-cyber">
       <Navbar />
-      <Dashboard />
+      <div className="w-full">
+        <Dashboard />
+      </div>
     </div>
   );
 };

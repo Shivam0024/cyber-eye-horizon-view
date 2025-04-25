@@ -94,9 +94,9 @@ const CowrieDashboard = () => {
   const totalCommands = ATTACKER_SESSIONS.reduce((total, session) => total + session.commands, 0);
 
   return (
-    <div className="min-h-screen bg-cyber">
+    <div className="min-h-screen w-full bg-cyber">
       <Navbar />
-      <div className="container mx-auto py-6 px-4">
+      <div className="w-full px-4 py-6">
         <h1 className="text-3xl font-bold text-cyber-accent mb-6">Cowrie SSH/Telnet Honeypot</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
